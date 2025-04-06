@@ -9,9 +9,12 @@ export const getProfile = query({
       return null;
     }
 
+    // Only use the first part of the subject ID
+    const baseUserId = identity.subject.split("|")[0];
+
     const profile = await ctx.db
       .query("profiles")
-      .filter((q) => q.eq(q.field("userId"), identity.subject))
+      .filter((q) => q.eq(q.field("userId"), baseUserId))
       .first();
 
     return profile;
@@ -31,10 +34,12 @@ export const updateProfile = mutation({
       throw new Error("Not authenticated");
     }
 
-    const userId = identity.subject;
+    // Only use the first part of the subject ID
+    const baseUserId = identity.subject.split("|")[0];
+
     const existingProfile = await ctx.db
       .query("profiles")
-      .filter((q) => q.eq(q.field("userId"), userId))
+      .filter((q) => q.eq(q.field("userId"), baseUserId))
       .first();
 
     if (existingProfile) {
@@ -48,7 +53,7 @@ export const updateProfile = mutation({
     } else {
       // Create new profile
       return await ctx.db.insert("profiles", {
-        userId,
+        userId: baseUserId,
         name: args.name || "",
         bio: args.bio,
         imageUrl: args.imageUrl,
