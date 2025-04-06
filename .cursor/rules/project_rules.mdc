@@ -7,3 +7,5 @@ always use pnpm
 ask for new library preferences to me before installing
 we are using convex-auth
 use proper loading indicators and sonner toasts
+prefer if else instead of ternary conditions when dealing with more then single statement branchings.
+divide into components for complex things. seperation of concerns is key

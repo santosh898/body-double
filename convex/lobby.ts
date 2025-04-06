@@ -21,13 +21,7 @@ export const getCurrentUserStatus = query({
       .first();
 
     if (!status) return null;
-
-    // Check if the status is still valid (within timeout)
-    const isActive = status.isOnline && now - status.lastPing < TIMEOUT;
-    return {
-      ...status,
-      isOnline: isActive,
-    };
+    return status;
   },
 });
 
