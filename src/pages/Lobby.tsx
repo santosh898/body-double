@@ -97,11 +97,11 @@ export default function Lobby() {
       )}
 
       {currentStatus !== undefined && currentStatus?.inSession && (
-        <div className="flex justify-between items-center mb-6 text-sm text-muted-foreground">
+        <div className="flex justify-between items-center mb-6 p-3 rounded-lg bg-base-200">
           <span>You have an active session</span>
           <button
             onClick={() => navigate("/room")}
-            className="btn btn-ghost btn-sm"
+            className="btn btn-primary btn-sm"
           >
             Go to Room →
           </button>
