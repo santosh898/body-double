@@ -124,7 +124,6 @@ export const getOnlineUsers = query({
       .filter((q) =>
         q.and(
           q.eq(q.field("isOnline"), true),
-          q.gt(q.field("lastPing"), now - TIMEOUT),
           q.eq(q.field("inSession"), false),
         ),
       )
