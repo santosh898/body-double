@@ -1,7 +1,7 @@
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { AudioChat } from "./AudioChat";
-import { ScreenShare } from "./ScreenShare";
+import { CallControl } from "./CallControl";
 
 interface ChatHeaderProps {
   partner: {
@@ -45,11 +45,7 @@ export function ChatHeader({
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <AudioChat
-            currentUserId={currentUserId}
-            partnerId={partner?.userId ?? ""}
-          />
-          <ScreenShare
+          <CallControl
             currentUserId={currentUserId}
             partnerId={partner?.userId ?? ""}
           />
