@@ -58,10 +58,7 @@ export function PairingRequests() {
                     {request.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1 mb-2">
                         {request.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded text-xs"
-                          >
+                          <span key={tag} className="badge">
                             {tag}
                           </span>
                         ))}

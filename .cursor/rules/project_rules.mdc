@@ -4,8 +4,10 @@ globs:
 alwaysApply: true
 ---
 always use pnpm
+always prefer daisy ui components before making up new ones
 ask for new library preferences to me before installing
 we are using convex-auth
 use proper loading indicators and sonner toasts
 prefer if else instead of ternary conditions when dealing with more then single statement branchings.
 divide into components for complex things. seperation of concerns is key
+do not make unnecessary copy changes or style changes or logic changes unless asked for
