@@ -37,7 +37,7 @@ export function Profile() {
 
     // Upload the file directly to storage
     const result = await fetch(uploadUrl, {
-      method: "PUT",
+      method: "POST",
       headers: { "Content-Type": file.type },
       body: file,
     });
