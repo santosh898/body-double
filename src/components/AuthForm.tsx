@@ -1,5 +1,6 @@
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface AuthFormProps {
   mode: "signIn" | "signUp";
@@ -8,7 +9,30 @@ interface AuthFormProps {
 
 export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
   const { signIn } = useAuthActions();
-  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const formData = new FormData(e.target as HTMLFormElement);
+    formData.set("flow", mode);
+
+    try {
+      await signIn("password", formData);
+      toast.success(
+        mode === "signIn"
+          ? "Signed in successfully!"
+          : "Account created successfully!",
+      );
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Authentication failed",
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-8 w-96 mx-auto">
@@ -17,14 +41,7 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
       </h2>
       <form
         className="flex flex-col gap-4"
-        onSubmit={(e) => {
-          e.preventDefault();
-          const formData = new FormData(e.target as HTMLFormElement);
-          formData.set("flow", mode);
-          void signIn("password", formData).catch((error) => {
-            setError(error.message);
-          });
-        }}
+        onSubmit={(e) => void handleSubmit(e)}
       >
         <input
           className="bg-light dark:bg-dark text-dark dark:text-light rounded-md p-2 border-2 border-slate-200 dark:border-slate-800"
@@ -32,6 +49,7 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
           name="email"
           placeholder="Email"
           required
+          disabled={isLoading}
         />
         <input
           className="bg-light dark:bg-dark text-dark dark:text-light rounded-md p-2 border-2 border-slate-200 dark:border-slate-800"
@@ -39,12 +57,25 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
           name="password"
           placeholder="Password"
           required
+          disabled={isLoading}
         />
         <button
-          className="bg-dark dark:bg-light text-light dark:text-dark rounded-md p-2 font-medium"
+          className="bg-dark dark:bg-light text-light dark:text-dark rounded-md p-2 font-medium disabled:opacity-50"
           type="submit"
+          disabled={isLoading}
         >
-          {mode === "signIn" ? "Sign In" : "Sign Up"}
+          {isLoading ? (
+            <div className="flex items-center justify-center">
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-current"></div>
+              <span className="ml-2">
+                {mode === "signIn" ? "Signing in..." : "Creating account..."}
+              </span>
+            </div>
+          ) : mode === "signIn" ? (
+            "Sign In"
+          ) : (
+            "Sign Up"
+          )}
         </button>
         <div className="flex flex-row gap-2 justify-center text-sm">
           <span>
@@ -60,13 +91,6 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
             {mode === "signIn" ? "Sign up" : "Sign in"}
           </button>
         </div>
-        {error && (
-          <div className="bg-red-500/20 border-2 border-red-500/50 rounded-md p-2">
-            <p className="text-dark dark:text-light font-mono text-xs">
-              Error: {error}
-            </p>
-          </div>
-        )}
       </form>
     </div>
   );

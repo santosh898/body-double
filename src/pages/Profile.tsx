@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery, useMutation, useConvexAuth } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
+import { toast } from "sonner";
 
 export function Profile() {
   const { isAuthenticated } = useConvexAuth();
@@ -32,25 +33,39 @@ export function Profile() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Get a signed upload URL
-    const uploadUrl = await generateUploadUrl();
+    const uploadPromise = async () => {
+      try {
+        // Get a signed upload URL
+        const uploadUrl = await generateUploadUrl();
 
-    // Upload the file directly to storage
-    const result = await fetch(uploadUrl, {
-      method: "POST",
-      headers: { "Content-Type": file.type },
-      body: file,
+        // Upload the file directly to storage
+        const result = await fetch(uploadUrl, {
+          method: "POST",
+          headers: { "Content-Type": file.type },
+          body: file,
+        });
+
+        if (!result.ok) {
+          throw new Error(`Upload failed: ${result.statusText}`);
+        }
+
+        // Get the storageId from the upload response
+        const { storageId } = await result.json();
+
+        // Update the profile with the new image URL
+        await updateProfile({ imageUrl: storageId });
+      } catch (error) {
+        throw new Error(
+          error instanceof Error ? error.message : "Failed to upload image",
+        );
+      }
+    };
+
+    toast.promise(uploadPromise(), {
+      loading: "Uploading image...",
+      success: "Image uploaded successfully!",
+      error: (err) => err.message,
     });
-
-    if (!result.ok) {
-      throw new Error(`Upload failed: ${result.statusText}`);
-    }
-
-    // Get the storageId from the upload response
-    const { storageId } = await result.json();
-
-    // Update the profile with the new image URL
-    await updateProfile({ imageUrl: storageId });
   };
 
   const handleAddTag = () => {
@@ -65,7 +80,11 @@ export function Profile() {
   };
 
   const handleSave = async () => {
-    await updateProfile({ name, bio, tags });
+    toast.promise(updateProfile({ name, bio, tags }), {
+      loading: "Saving profile...",
+      success: "Profile updated successfully!",
+      error: "Failed to update profile",
+    });
   };
 
   if (!isAuthenticated) {
@@ -184,7 +203,7 @@ export function Profile() {
           <div className="flex justify-end">
             <button
               onClick={() => void handleSave()}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
             >
               Save Profile
             </button>

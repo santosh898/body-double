@@ -7,11 +7,13 @@ import {
 import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
 import { Profile } from "./pages/Profile";
+import { Toaster } from "sonner";
 
 export default function App() {
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-light dark:bg-dark text-dark dark:text-light">
+        <Toaster theme="system" position="top-right" />
         <Navigation />
         <Routes>
           {/* Public only routes - redirect to /profile if authenticated */}
