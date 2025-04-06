@@ -9,12 +9,21 @@ export function Navigation() {
   return (
     <header className="sticky top-0 z-10 bg-light dark:bg-dark p-4 border-b-2 border-slate-200 dark:border-slate-800">
       <nav className="flex justify-between items-center max-w-6xl mx-auto">
-        <Link to="/" className="text-xl font-bold">
+        <Link
+          to={isAuthenticated ? "/lobby" : "/"}
+          className="text-xl font-bold"
+        >
           Body Double
         </Link>
         <div className="flex gap-4 items-center">
           {isAuthenticated ? (
             <>
+              <Link
+                to="/lobby"
+                className="text-dark dark:text-light hover:underline"
+              >
+                Lobby
+              </Link>
               <Link
                 to="/profile"
                 className="text-dark dark:text-light hover:underline"

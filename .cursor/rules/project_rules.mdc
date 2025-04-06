@@ -5,3 +5,5 @@ alwaysApply: true
 ---
 always use pnpm
 ask for new library preferences to me before installing
+we are using convex-auth
+use proper loading indicators and sonner toasts

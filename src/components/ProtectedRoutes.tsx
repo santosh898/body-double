@@ -17,7 +17,13 @@ export function ProtectedRoutes() {
   );
 }
 
-export function PublicOnlyRoutes() {
+interface PublicOnlyRoutesProps {
+  redirectTo?: string;
+}
+
+export function PublicOnlyRoutes({
+  redirectTo = "/profile",
+}: PublicOnlyRoutesProps) {
   const { isAuthenticated, isLoading } = useConvexAuth();
   const location = useLocation();
 
@@ -28,6 +34,6 @@ export function PublicOnlyRoutes() {
   return !isAuthenticated ? (
     <Outlet />
   ) : (
-    <Navigate to="/profile" state={{ from: location }} replace />
+    <Navigate to={redirectTo} state={{ from: location }} replace />
   );
 }

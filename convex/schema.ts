@@ -14,6 +14,17 @@ export default defineSchema({
     tags: v.optional(v.array(v.string())),
     userId: v.string(),
   }).index("by_userId", ["userId"]),
+  userStatus: defineTable({
+    userId: v.string(),
+    isOnline: v.boolean(),
+    currentActivity: v.optional(v.string()),
+    lastPing: v.number(),
+    inSession: v.optional(v.boolean()),
+    sessionPartnerId: v.optional(v.string()),
+  })
+    .index("by_userId", ["userId"])
+    .index("by_online", ["isOnline"])
+    .index("by_lastPing", ["lastPing"]),
   numbers: defineTable({
     value: v.number(),
   }),
