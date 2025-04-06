@@ -32,6 +32,8 @@ export const updateStatus = mutation({
     tags: v.optional(v.array(v.string())),
     isAudioEnabled: v.optional(v.boolean()),
     rtcPeerId: v.optional(v.string()),
+    isScreenSharing: v.optional(v.boolean()),
+    screenShareId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -72,6 +74,14 @@ export const updateStatus = mutation({
         patch.rtcPeerId = args.rtcPeerId;
       }
 
+      if (args.isScreenSharing !== undefined) {
+        patch.isScreenSharing = args.isScreenSharing;
+      }
+
+      if (args.screenShareId !== undefined) {
+        patch.screenShareId = args.screenShareId;
+      }
+
       return await ctx.db.patch(existingStatus._id, patch);
     } else {
       return await ctx.db.insert("userStatus", {
@@ -83,6 +93,8 @@ export const updateStatus = mutation({
         tags: args.tags,
         isAudioEnabled: args.isAudioEnabled ?? false,
         rtcPeerId: args.rtcPeerId,
+        isScreenSharing: args.isScreenSharing ?? false,
+        screenShareId: args.screenShareId,
       });
     }
   },
