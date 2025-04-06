@@ -96,6 +96,18 @@ export default function Lobby() {
         </div>
       )}
 
+      {currentStatus !== undefined && currentStatus?.inSession && (
+        <div className="flex justify-between items-center mb-6 text-sm text-muted-foreground">
+          <span>You have an active session</span>
+          <button
+            onClick={() => navigate("/room")}
+            className="btn btn-ghost btn-sm"
+          >
+            Go to Room →
+          </button>
+        </div>
+      )}
+
       {currentStatus !== undefined && !isOnline && (
         <OnlineForm
           initialActivity={activity}
