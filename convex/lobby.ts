@@ -134,3 +134,45 @@ export const getOnlineUsers = query({
     );
   },
 });
+
+// End current session
+export const endSession = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const userId = identity.subject.split("|")[0];
+    const currentStatus = await ctx.db
+      .query("userStatus")
+      .filter((q) => q.eq(q.field("userId"), userId))
+      .first();
+
+    if (!currentStatus?.inSession || !currentStatus.sessionPartnerId) {
+      throw new Error("Not in a session");
+    }
+
+    // Get partner's status
+    const partnerStatus = await ctx.db
+      .query("userStatus")
+      .filter((q) => q.eq(q.field("userId"), currentStatus.sessionPartnerId))
+      .first();
+
+    // Update both users' status
+    await ctx.db.patch(currentStatus._id, {
+      inSession: false,
+      sessionPartnerId: undefined,
+    });
+
+    if (partnerStatus) {
+      await ctx.db.patch(partnerStatus._id, {
+        inSession: false,
+        sessionPartnerId: undefined,
+      });
+    }
+
+    return null;
+  },
+});

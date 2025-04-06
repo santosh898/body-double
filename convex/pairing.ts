@@ -171,11 +171,17 @@ export const respondToRequest = mutation({
         .first();
 
       if (fromUserStatus) {
-        await ctx.db.patch(fromUserStatus._id, { inSession: true });
+        await ctx.db.patch(fromUserStatus._id, {
+          inSession: true,
+          sessionPartnerId: request.toUserId,
+        });
       }
 
       if (toUserStatus) {
-        await ctx.db.patch(toUserStatus._id, { inSession: true });
+        await ctx.db.patch(toUserStatus._id, {
+          inSession: true,
+          sessionPartnerId: request.fromUserId,
+        });
       }
     }
 

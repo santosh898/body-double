@@ -4,8 +4,10 @@ import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { toast } from "sonner";
 import { Id } from "../../../convex/_generated/dataModel";
+import { useNavigate } from "react-router-dom";
 
 export function PairingRequests() {
+  const navigate = useNavigate();
   const incomingRequests = useQuery(api.pairing.getIncomingRequests) || [];
   const outgoingRequest = useQuery(api.pairing.getOutgoingRequest);
   const respondToRequest = useMutation(api.pairing.respondToRequest);
@@ -18,6 +20,9 @@ export function PairingRequests() {
     try {
       await respondToRequest({ requestId, accept });
       toast.success(accept ? "Request accepted!" : "Request declined");
+      if (accept) {
+        navigate("/room");
+      }
     } catch (error) {
       toast.error("Failed to respond to request");
       console.error(error);

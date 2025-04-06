@@ -44,4 +44,12 @@ export default defineSchema({
     .index("by_to_user", ["toUserId"])
     .index("by_from_user", ["fromUserId"])
     .index("by_status", ["status"]),
+  messages: defineTable({
+    content: v.string(),
+    userId: v.string(),
+    sessionId: v.string(),
+    createdAt: v.number(),
+  })
+    .index("by_session", ["sessionId"])
+    .index("by_timestamp", ["createdAt"]),
 });

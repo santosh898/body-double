@@ -8,6 +8,7 @@ import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
 import { Profile } from "./pages/Profile";
 import Lobby from "./pages/Lobby";
+import Room from "./pages/Room";
 import { Toaster } from "sonner";
 
 export default function App() {
@@ -34,6 +35,7 @@ export default function App() {
             <Route path="/" element={<Lobby />} />
             <Route path="/lobby" element={<Lobby />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/room" element={<Room />} />
           </Route>
         </Routes>
       </div>
