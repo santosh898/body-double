@@ -29,4 +29,19 @@ export default defineSchema({
   numbers: defineTable({
     value: v.number(),
   }),
+  pairingRequests: defineTable({
+    fromUserId: v.string(),
+    toUserId: v.string(),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("accepted"),
+      v.literal("declined"),
+    ),
+    createdAt: v.number(),
+    currentActivity: v.string(),
+    tags: v.array(v.string()),
+  })
+    .index("by_to_user", ["toUserId"])
+    .index("by_from_user", ["fromUserId"])
+    .index("by_status", ["status"]),
 });

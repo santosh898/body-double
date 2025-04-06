@@ -6,6 +6,7 @@ import { LoadingSpinner } from "../components/LoadingSpinner";
 import { OnlineForm } from "../components/lobby/OnlineForm";
 import { OnlineStatus } from "../components/lobby/OnlineStatus";
 import { UserList } from "../components/lobby/UserList";
+import { PairingRequests } from "../components/lobby/PairingRequests";
 import { toast } from "sonner";
 
 export default function Lobby() {
@@ -49,7 +50,6 @@ export default function Lobby() {
 
     return () => {
       clearInterval(interval);
-      void updateStatus({ isOnline: false });
     };
   }, [isOnline, ping, updateStatus]);
 
@@ -87,7 +87,7 @@ export default function Lobby() {
 
   return (
     <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-8">Lobby</h1>
+      <h1 className="text-3xl font-bold mb-8">Body Double Lobby</h1>
 
       {currentStatus === undefined && (
         <div className="flex items-center justify-center p-8">
@@ -112,10 +112,14 @@ export default function Lobby() {
         />
       )}
 
+      <PairingRequests />
+
       <UserList
         users={filteredUsers}
         filterTag={filterTag}
         onFilterTag={setFilterTag}
+        currentActivity={activity}
+        currentTags={tags}
       />
     </div>
   );

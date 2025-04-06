@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Card } from "../ui/card";
@@ -17,6 +17,11 @@ export function OnlineForm({
   const [activity, setActivity] = useState(initialActivity);
   const [tags, setTags] = useState<string[]>(initialTags);
   const [tagInput, setTagInput] = useState("");
+
+  useEffect(() => {
+    setActivity(initialActivity);
+    setTags(initialTags);
+  }, [initialActivity, initialTags]);
 
   const handleAddTag = () => {
     if (!tagInput.trim()) {
@@ -87,7 +92,7 @@ export function OnlineForm({
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="bg-slate-200 dark:bg-slate-800 px-2 py-1 rounded-md text-sm flex items-center gap-1"
+                className="badge px-2 py-1 rounded-md text-sm flex items-center gap-1"
               >
                 {tag}
                 <button

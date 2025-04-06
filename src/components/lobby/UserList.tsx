@@ -1,6 +1,9 @@
+import { useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { Doc } from "../../../convex/_generated/dataModel";
+import { toast } from "sonner";
 
 interface UserListProps {
   users: Array<{
@@ -9,9 +12,37 @@ interface UserListProps {
   }>;
   filterTag: string | null;
   onFilterTag: (tag: string | null) => void;
+  currentActivity: string;
+  currentTags: string[];
 }
 
-export function UserList({ users, filterTag, onFilterTag }: UserListProps) {
+export function UserList({
+  users,
+  filterTag,
+  onFilterTag,
+  currentActivity,
+  currentTags,
+}: UserListProps) {
+  const sendRequest = useMutation(api.pairing.sendRequest);
+
+  const handlePairUp = async (userId: string) => {
+    try {
+      await sendRequest({
+        toUserId: userId,
+        currentActivity,
+        tags: currentTags,
+      });
+      toast.success("Pairing request sent!");
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Failed to send pairing request");
+      }
+      console.error(error);
+    }
+  };
+
   if (!users.length) {
     return (
       <p className="text-center text-gray-500 mt-8">
@@ -86,10 +117,7 @@ export function UserList({ users, filterTag, onFilterTag }: UserListProps) {
                     variant="outline"
                     size="sm"
                     className="mt-2"
-                    onClick={() => {
-                      // TODO: Implement pairing logic
-                      console.log("Pair with", profile.name);
-                    }}
+                    onClick={() => void handlePairUp(status.userId)}
                   >
                     Pair Up
                   </Button>

@@ -170,11 +170,15 @@ export function Profile() {
               </label>
               <div className="flex flex-wrap gap-2 mb-2">
                 {tags.map((tag) => (
-                  <span key={tag} className="badge badge-primary">
+                  <span
+                    key={tag}
+                    className="badge px-2 py-1 rounded-md text-sm flex items-center gap-1"
+                  >
                     {tag}
                     <button
+                      type="button"
                       onClick={() => handleRemoveTag(tag)}
-                      className="btn btn-ghost btn-xs btn-circle"
+                      className="text-xs hover:text-red-500"
                     >
                       ×
                     </button>

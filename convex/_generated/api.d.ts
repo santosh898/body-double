@@ -18,6 +18,7 @@ import type * as files from "../files.js";
 import type * as http from "../http.js";
 import type * as lobby from "../lobby.js";
 import type * as myFunctions from "../myFunctions.js";
+import type * as pairing from "../pairing.js";
 import type * as profiles from "../profiles.js";
 
 /**
@@ -34,6 +35,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   lobby: typeof lobby;
   myFunctions: typeof myFunctions;
+  pairing: typeof pairing;
   profiles: typeof profiles;
 }>;
 export declare const api: FilterApi<
