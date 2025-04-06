@@ -21,6 +21,7 @@ export default defineSchema({
     lastPing: v.number(),
     inSession: v.optional(v.boolean()),
     sessionPartnerId: v.optional(v.string()),
+    tags: v.optional(v.array(v.string())),
   })
     .index("by_userId", ["userId"])
     .index("by_online", ["isOnline"])
