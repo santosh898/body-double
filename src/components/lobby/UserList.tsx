@@ -25,13 +25,9 @@ export function UserList({
 }: UserListProps) {
   const sendRequest = useMutation(api.pairing.sendRequest);
   const outgoingRequest = useQuery(api.pairing.getOutgoingRequest);
+  const currentStatus = useQuery(api.lobby.getCurrentUserStatus);
 
   const handlePairUp = async (userId: string) => {
-    if (outgoingRequest) {
-      toast.error("You already have a pending pairing request");
-      return;
-    }
-
     try {
       await sendRequest({
         toUserId: userId,
@@ -124,11 +120,19 @@ export function UserList({
                     size="sm"
                     className="mt-2"
                     onClick={() => void handlePairUp(status.userId)}
-                    disabled={outgoingRequest !== null}
+                    disabled={
+                      outgoingRequest !== null ||
+                      currentStatus?.inSession ||
+                      status.inSession
+                    }
                   >
-                    {outgoingRequest?.request.toUserId === status.userId
-                      ? "Already Sent"
-                      : "Pair Up"}
+                    {currentStatus?.inSession
+                      ? "You're in a session"
+                      : status.inSession
+                        ? "User is in a session"
+                        : outgoingRequest
+                          ? "Already Sent"
+                          : "Pair Up"}
                   </Button>
                 </div>
               </div>

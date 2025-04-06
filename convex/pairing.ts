@@ -19,6 +19,26 @@ export const sendRequest = mutation({
       throw new Error("Cannot send pairing request to yourself");
     }
 
+    // Check if sender is in session
+    const senderStatus = await ctx.db
+      .query("userStatus")
+      .filter((q) => q.eq(q.field("userId"), fromUserId))
+      .first();
+
+    if (senderStatus?.inSession) {
+      throw new Error("You are already in a session");
+    }
+
+    // Check if recipient is in session
+    const recipientStatus = await ctx.db
+      .query("userStatus")
+      .filter((q) => q.eq(q.field("userId"), args.toUserId))
+      .first();
+
+    if (recipientStatus?.inSession) {
+      throw new Error("This user is already in a session");
+    }
+
     // Check if user already has a pending request
     const existingRequest = await ctx.db
       .query("pairingRequests")
@@ -136,6 +156,27 @@ export const respondToRequest = mutation({
 
     if (request.status !== "pending") {
       throw new Error("Request is no longer pending");
+    }
+
+    if (args.accept) {
+      // Update both users' status to inSession
+      const fromUserStatus = await ctx.db
+        .query("userStatus")
+        .filter((q) => q.eq(q.field("userId"), request.fromUserId))
+        .first();
+
+      const toUserStatus = await ctx.db
+        .query("userStatus")
+        .filter((q) => q.eq(q.field("userId"), request.toUserId))
+        .first();
+
+      if (fromUserStatus) {
+        await ctx.db.patch(fromUserStatus._id, { inSession: true });
+      }
+
+      if (toUserStatus) {
+        await ctx.db.patch(toUserStatus._id, { inSession: true });
+      }
     }
 
     return await ctx.db.patch(args.requestId, {

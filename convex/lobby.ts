@@ -106,18 +106,11 @@ export const getOnlineUsers = query({
     }
 
     const baseUserId = identity.subject.split("|")[0];
-    const now = Date.now();
-    const TIMEOUT = 30000; // 30 seconds
 
     // Get all online users who have pinged recently
     const onlineStatuses = await ctx.db
       .query("userStatus")
-      .filter((q) =>
-        q.and(
-          q.eq(q.field("isOnline"), true),
-          q.eq(q.field("inSession"), false),
-        ),
-      )
+      .filter((q) => q.and(q.eq(q.field("isOnline"), true)))
       .collect();
 
     // Get profiles for online users
