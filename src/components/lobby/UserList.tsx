@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
-import { Doc } from "../../../convex/_generated/dataModel";
+import { Doc, Id } from "../../../convex/_generated/dataModel";
 import { toast } from "sonner";
 
 interface UserListProps {
@@ -16,16 +16,28 @@ interface UserListProps {
   currentTags: string[];
 }
 
-export function UserList({
-  users,
-  filterTag,
-  onFilterTag,
+function UserCard({
+  profile,
+  status,
   currentActivity,
   currentTags,
-}: UserListProps) {
+  outgoingRequest,
+  currentStatus,
+}: {
+  profile: Doc<"profiles">;
+  status: Doc<"userStatus">;
+  currentActivity: string;
+  currentTags: string[];
+  outgoingRequest: any;
+  currentStatus: any;
+}) {
   const sendRequest = useMutation(api.pairing.sendRequest);
-  const outgoingRequest = useQuery(api.pairing.getOutgoingRequest);
-  const currentStatus = useQuery(api.lobby.getCurrentUserStatus);
+  const imageUrl = useQuery(
+    api.files.getImageUrl,
+    profile.imageUrl
+      ? { storageId: profile.imageUrl as Id<"_storage"> }
+      : "skip",
+  );
 
   const handlePairUp = async (userId: string) => {
     try {
@@ -44,6 +56,66 @@ export function UserList({
       console.error(error);
     }
   };
+
+  return (
+    <Card className="p-4">
+      <div className="flex items-center gap-4">
+        {imageUrl && (
+          <img
+            src={imageUrl}
+            alt={profile.name}
+            className="w-12 h-12 rounded-full"
+          />
+        )}
+        <div className="flex-1">
+          <h3 className="font-semibold">{profile.name}</h3>
+          <p className="text-sm text-gray-600 mb-2">{status.currentActivity}</p>
+          {status.tags && status.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1 mb-2">
+              {status.tags.map((tag) => (
+                <span key={tag} className="badge">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+          {profile.bio && (
+            <p className="text-sm text-gray-500 mt-1">{profile.bio}</p>
+          )}
+          <Button
+            variant="outline"
+            size="sm"
+            className="mt-2"
+            onClick={() => void handlePairUp(status.userId)}
+            disabled={
+              outgoingRequest !== null ||
+              currentStatus?.inSession ||
+              status.inSession
+            }
+          >
+            {currentStatus?.inSession
+              ? "You're in a session"
+              : status.inSession
+                ? "User is in a session"
+                : outgoingRequest
+                  ? "Already Sent"
+                  : "Pair Up"}
+          </Button>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+export function UserList({
+  users,
+  filterTag,
+  onFilterTag,
+  currentActivity,
+  currentTags,
+}: UserListProps) {
+  const outgoingRequest = useQuery(api.pairing.getOutgoingRequest);
+  const currentStatus = useQuery(api.lobby.getCurrentUserStatus);
 
   if (!users.length) {
     return (
@@ -85,58 +157,16 @@ export function UserList({
             return null;
           }
 
-          const profile = user.profile;
-          const status = user.status;
-
           return (
-            <Card key={status._id} className="p-4">
-              <div className="flex items-center gap-4">
-                {profile.imageUrl && (
-                  <img
-                    src={profile.imageUrl}
-                    alt={profile.name}
-                    className="w-12 h-12 rounded-full"
-                  />
-                )}
-                <div className="flex-1">
-                  <h3 className="font-semibold">{profile.name}</h3>
-                  <p className="text-sm text-gray-600 mb-2">
-                    {status.currentActivity}
-                  </p>
-                  {status.tags && status.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mb-2">
-                      {status.tags.map((tag) => (
-                        <span key={tag} className="badge">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                  {profile.bio && (
-                    <p className="text-sm text-gray-500 mt-1">{profile.bio}</p>
-                  )}
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="mt-2"
-                    onClick={() => void handlePairUp(status.userId)}
-                    disabled={
-                      outgoingRequest !== null ||
-                      currentStatus?.inSession ||
-                      status.inSession
-                    }
-                  >
-                    {currentStatus?.inSession
-                      ? "You're in a session"
-                      : status.inSession
-                        ? "User is in a session"
-                        : outgoingRequest
-                          ? "Already Sent"
-                          : "Pair Up"}
-                  </Button>
-                </div>
-              </div>
-            </Card>
+            <UserCard
+              key={user.status._id}
+              profile={user.profile}
+              status={user.status}
+              currentActivity={currentActivity}
+              currentTags={currentTags}
+              outgoingRequest={outgoingRequest}
+              currentStatus={currentStatus}
+            />
           );
         })}
       </div>

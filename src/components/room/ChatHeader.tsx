@@ -1,12 +1,14 @@
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
-import { AudioChat } from "./AudioChat";
 import { CallControl } from "./CallControl";
+import { Id } from "../../../convex/_generated/dataModel";
 
 interface ChatHeaderProps {
   partner: {
     name: string;
-    imageUrl?: string;
+    imageUrl?: Id<"_storage">;
     userId: string;
   } | null;
   currentUserId: string;
@@ -20,14 +22,19 @@ export function ChatHeader({
   currentActivity,
   onEndSession,
 }: ChatHeaderProps) {
+  const imageUrl = useQuery(
+    api.files.getImageUrl,
+    partner?.imageUrl ? { storageId: partner.imageUrl } : "skip",
+  );
+
   return (
     <Card className="p-4 mb-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center bg-muted text-muted-foreground text-xl font-semibold">
-            {partner?.imageUrl ? (
+            {imageUrl ? (
               <img
-                src={partner.imageUrl}
+                src={imageUrl}
                 alt={partner?.name}
                 className="w-full h-full object-cover"
               />
