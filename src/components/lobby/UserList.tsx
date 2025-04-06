@@ -1,4 +1,4 @@
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
@@ -24,8 +24,14 @@ export function UserList({
   currentTags,
 }: UserListProps) {
   const sendRequest = useMutation(api.pairing.sendRequest);
+  const outgoingRequest = useQuery(api.pairing.getOutgoingRequest);
 
   const handlePairUp = async (userId: string) => {
+    if (outgoingRequest) {
+      toast.error("You already have a pending pairing request");
+      return;
+    }
+
     try {
       await sendRequest({
         toUserId: userId,
@@ -118,8 +124,11 @@ export function UserList({
                     size="sm"
                     className="mt-2"
                     onClick={() => void handlePairUp(status.userId)}
+                    disabled={outgoingRequest !== null}
                   >
-                    Pair Up
+                    {outgoingRequest?.request.toUserId === status.userId
+                      ? "Already Sent"
+                      : "Pair Up"}
                   </Button>
                 </div>
               </div>

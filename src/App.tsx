@@ -14,7 +14,13 @@ export default function App() {
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-light dark:bg-dark text-dark dark:text-light">
-        <Toaster theme="system" position="top-right" />
+        <Toaster
+          theme="system"
+          position="bottom-right"
+          toastOptions={{
+            duration: 1000,
+          }}
+        />
         <Navigation />
         <Routes>
           {/* Public only routes - redirect to /lobby if authenticated */}
