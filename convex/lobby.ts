@@ -3,14 +3,16 @@ import { mutation, query } from "./_generated/server";
 
 // Get current user's status
 export const getCurrentUserStatus = query({
-  args: {},
-  handler: async (ctx) => {
+  args: {
+    userId: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       return null;
     }
 
-    const baseUserId = identity.subject.split("|")[0];
+    const baseUserId = args.userId || identity.subject.split("|")[0];
 
     const status = await ctx.db
       .query("userStatus")
@@ -25,9 +27,11 @@ export const getCurrentUserStatus = query({
 // Update user's online status and current activity
 export const updateStatus = mutation({
   args: {
-    isOnline: v.boolean(),
+    isOnline: v.optional(v.boolean()),
     currentActivity: v.optional(v.string()),
     tags: v.optional(v.array(v.string())),
+    isAudioEnabled: v.optional(v.boolean()),
+    rtcPeerId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -45,9 +49,12 @@ export const updateStatus = mutation({
 
     if (existingStatus) {
       const patch: any = {
-        isOnline: args.isOnline,
         lastPing: now,
       };
+
+      if (args.isOnline !== undefined) {
+        patch.isOnline = args.isOnline;
+      }
 
       if (args.currentActivity !== undefined) {
         patch.currentActivity = args.currentActivity;
@@ -57,15 +64,25 @@ export const updateStatus = mutation({
         patch.tags = args.tags;
       }
 
+      if (args.isAudioEnabled !== undefined) {
+        patch.isAudioEnabled = args.isAudioEnabled;
+      }
+
+      if (args.rtcPeerId !== undefined) {
+        patch.rtcPeerId = args.rtcPeerId;
+      }
+
       return await ctx.db.patch(existingStatus._id, patch);
     } else {
       return await ctx.db.insert("userStatus", {
         userId: baseUserId,
-        isOnline: args.isOnline,
+        isOnline: args.isOnline ?? true,
         currentActivity: args.currentActivity,
         lastPing: now,
         inSession: false,
         tags: args.tags,
+        isAudioEnabled: args.isAudioEnabled ?? false,
+        rtcPeerId: args.rtcPeerId,
       });
     }
   },

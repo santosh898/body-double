@@ -12,7 +12,7 @@ import { toast } from "sonner";
 export default function Lobby() {
   const navigate = useNavigate();
   const { isAuthenticated } = useConvexAuth();
-  const currentStatus = useQuery(api.lobby.getCurrentUserStatus);
+  const currentStatus = useQuery(api.lobby.getCurrentUserStatus, {});
   const updateStatus = useMutation(api.lobby.updateStatus);
   const ping = useMutation(api.lobby.ping);
   const onlineUsers = useQuery(api.lobby.getOnlineUsers) || [];

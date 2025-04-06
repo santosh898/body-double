@@ -1,17 +1,21 @@
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
+import { AudioChat } from "./AudioChat";
 
 interface ChatHeaderProps {
   partner: {
     name: string;
     imageUrl?: string;
+    userId: string;
   } | null;
+  currentUserId: string;
   currentActivity?: string;
   onEndSession: () => void;
 }
 
 export function ChatHeader({
   partner,
+  currentUserId,
   currentActivity,
   onEndSession,
 }: ChatHeaderProps) {
@@ -39,14 +43,20 @@ export function ChatHeader({
             )}
           </div>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onEndSession}
-          className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950"
-        >
-          End Session
-        </Button>
+        <div className="flex items-center gap-4">
+          <AudioChat
+            currentUserId={currentUserId}
+            partnerId={partner?.userId ?? ""}
+          />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onEndSession}
+            className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950"
+          >
+            End Session
+          </Button>
+        </div>
       </div>
     </Card>
   );

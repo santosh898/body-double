@@ -22,6 +22,8 @@ export default defineSchema({
     inSession: v.optional(v.boolean()),
     sessionPartnerId: v.optional(v.string()),
     tags: v.optional(v.array(v.string())),
+    isAudioEnabled: v.optional(v.boolean()),
+    rtcPeerId: v.optional(v.string()),
   })
     .index("by_userId", ["userId"])
     .index("by_online", ["isOnline"])

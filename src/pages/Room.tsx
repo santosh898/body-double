@@ -5,15 +5,15 @@ import { api } from "../../convex/_generated/api";
 import { LoadingSpinner } from "../components/LoadingSpinner";
 import { Card } from "../components/ui/card";
 import { toast } from "sonner";
-import { ChatHeader } from "../components/room/ChatHeader";
 import { MessageList } from "../components/room/MessageList";
 import { MessageInput } from "../components/room/MessageInput";
+import { ChatHeader } from "../components/room/ChatHeader";
 
 export default function Room() {
   const navigate = useNavigate();
   const { isAuthenticated } = useConvexAuth();
 
-  const currentStatus = useQuery(api.lobby.getCurrentUserStatus);
+  const currentStatus = useQuery(api.lobby.getCurrentUserStatus, {});
   const chatData = useQuery(api.chat.getMessages);
   const sendMessage = useMutation(api.chat.sendMessage);
   const endSession = useMutation(api.lobby.endSession);
@@ -65,6 +65,7 @@ export default function Room() {
     <div className="container mx-auto py-8 max-w-4xl">
       <ChatHeader
         partner={partner}
+        currentUserId={currentUser?.userId ?? ""}
         currentActivity={currentStatus.currentActivity}
         onEndSession={handleEndSession}
       />
