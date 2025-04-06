@@ -5,11 +5,13 @@ export function SignIn() {
   const [mode, setMode] = useState<"signIn" | "signUp">("signIn");
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <AuthForm
-        mode={mode}
-        onToggleMode={() => setMode(mode === "signIn" ? "signUp" : "signIn")}
-      />
+    <div className="min-h-screen hero bg-base-200 px-4">
+      <div className="hero-content w-full max-w-3xl p-0">
+        <AuthForm
+          mode={mode}
+          onToggleMode={() => setMode(mode === "signIn" ? "signUp" : "signIn")}
+        />
+      </div>
     </div>
   );
 }

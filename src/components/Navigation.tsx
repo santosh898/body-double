@@ -7,54 +7,42 @@ export function Navigation() {
   const { signOut } = useAuthActions();
 
   return (
-    <header className="sticky top-0 z-10 bg-light dark:bg-dark p-4 border-b-2 border-slate-200 dark:border-slate-800">
-      <nav className="flex justify-between items-center max-w-6xl mx-auto">
+    <div className="navbar bg-base-100 sticky top-0 z-10 border-b">
+      <div className="navbar-start">
         <Link
           to={isAuthenticated ? "/lobby" : "/"}
-          className="text-xl font-bold"
+          className="btn btn-ghost text-xl"
         >
           Body Double
         </Link>
-        <div className="flex gap-4 items-center">
-          {isAuthenticated ? (
-            <>
-              <Link
-                to="/lobby"
-                className="text-dark dark:text-light hover:underline"
-              >
-                Lobby
-              </Link>
-              <Link
-                to="/profile"
-                className="text-dark dark:text-light hover:underline"
-              >
-                Profile
-              </Link>
-              <button
-                className="bg-slate-200 dark:bg-slate-800 text-dark dark:text-light rounded-md px-3 py-1"
-                onClick={() => void signOut()}
-              >
-                Sign out
-              </button>
-            </>
-          ) : (
-            <>
-              <Link
-                to="/sign-in"
-                className="text-dark dark:text-light hover:underline"
-              >
-                Sign in
-              </Link>
-              <Link
-                to="/sign-up"
-                className="bg-dark dark:bg-light text-light dark:text-dark rounded-md px-3 py-1"
-              >
-                Sign up
-              </Link>
-            </>
-          )}
-        </div>
-      </nav>
-    </header>
+      </div>
+      <div className="navbar-end">
+        {isAuthenticated ? (
+          <>
+            <Link to="/lobby" className="btn btn-ghost">
+              Lobby
+            </Link>
+            <Link to="/profile" className="btn btn-ghost">
+              Profile
+            </Link>
+            <button
+              className="btn btn-outline ml-2"
+              onClick={() => void signOut()}
+            >
+              Sign out
+            </button>
+          </>
+        ) : (
+          <>
+            <Link to="/sign-in" className="btn btn-ghost">
+              Sign in
+            </Link>
+            <Link to="/sign-up" className="btn btn-primary ml-2">
+              Sign up
+            </Link>
+          </>
+        )}
+      </div>
+    </div>
   );
 }

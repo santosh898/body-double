@@ -1,6 +1,5 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { Id } from "./_generated/dataModel";
 
 // Get current user's status
 export const getCurrentUserStatus = query({
@@ -12,8 +11,6 @@ export const getCurrentUserStatus = query({
     }
 
     const baseUserId = identity.subject.split("|")[0];
-    const now = Date.now();
-    const TIMEOUT = 30000; // 30 seconds
 
     const status = await ctx.db
       .query("userStatus")

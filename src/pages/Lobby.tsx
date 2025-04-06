@@ -23,7 +23,6 @@ export default function Lobby() {
 
   // Initialize state when currentStatus is available
   useEffect(() => {
-    console.log(currentStatus);
     if (currentStatus) {
       setIsOnline(currentStatus.isOnline);
       setActivity(currentStatus.currentActivity ?? "");

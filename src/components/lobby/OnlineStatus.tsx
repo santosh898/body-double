@@ -20,10 +20,7 @@ export function OnlineStatus({
           <p className="text-sm mb-2">Working on: {activity}</p>
           <div className="flex flex-wrap gap-2">
             {tags.map((tag) => (
-              <span
-                key={tag}
-                className="bg-slate-200 dark:bg-slate-800 px-2 py-1 rounded-md text-sm"
-              >
+              <span key={tag} className="badge">
                 {tag}
               </span>
             ))}

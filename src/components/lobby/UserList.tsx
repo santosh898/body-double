@@ -34,17 +34,13 @@ export function UserList({ users, filterTag, onFilterTag }: UserListProps) {
           <h3 className="text-sm font-medium mb-2">Filter by tag:</h3>
           <div className="flex flex-wrap gap-2">
             {allTags.map((tag) => (
-              <button
+              <span
+                className="badge"
                 key={tag}
                 onClick={() => onFilterTag(filterTag === tag ? null : tag)}
-                className={`px-2 py-1 rounded-md text-sm ${
-                  filterTag === tag
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700"
-                }`}
               >
                 {tag}
-              </button>
+              </span>
             ))}
           </div>
         </div>
@@ -77,10 +73,7 @@ export function UserList({ users, filterTag, onFilterTag }: UserListProps) {
                   {status.tags && status.tags.length > 0 && (
                     <div className="flex flex-wrap gap-1 mb-2">
                       {status.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded text-xs"
-                        >
+                        <span key={tag} className="badge">
                           {tag}
                         </span>
                       ))}

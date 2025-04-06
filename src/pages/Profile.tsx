@@ -89,11 +89,13 @@ export function Profile() {
 
   if (!isAuthenticated) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8">Profile</h1>
-          <div className="bg-light dark:bg-dark p-6 rounded-lg border-2 border-slate-200 dark:border-slate-800">
-            <p className="text-lg">Please sign in to view your profile.</p>
+      <div className="min-h-screen hero bg-base-200 px-4">
+        <div className="hero-content w-full max-w-3xl p-0">
+          <div className="card bg-base-100 shadow-xl w-full">
+            <div className="card-body">
+              <h2 className="card-title justify-center">Profile</h2>
+              <p>Please sign in to view your profile.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -101,112 +103,111 @@ export function Profile() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">Profile</h1>
-        <div className="bg-light dark:bg-dark p-6 rounded-lg border-2 border-slate-200 dark:border-slate-800 space-y-6">
-          {/* Profile Image */}
-          <div className="flex flex-col items-center space-y-4">
-            <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-200">
-              {getImageUrl && (
-                <img
-                  src={getImageUrl}
-                  alt="Profile"
-                  className="w-full h-full object-cover"
-                />
-              )}
+    <div className="min-h-screen hero bg-base-200 px-4">
+      <div className="hero-content w-full max-w-4xl p-0">
+        <div className="card bg-base-100 shadow-xl w-full">
+          <div className="card-body gap-6">
+            <h2 className="card-title justify-center text-3xl">Profile</h2>
+
+            {/* Profile Image */}
+            <div className="flex flex-col items-center gap-4">
+              <div className="avatar">
+                <div className="w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                  {getImageUrl && (
+                    <img
+                      src={getImageUrl}
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                    />
+                  )}
+                </div>
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => void handleFileUpload(e)}
+                className="hidden"
+                id="imageUpload"
+              />
+              <label htmlFor="imageUpload" className="btn btn-primary">
+                Upload Image
+              </label>
             </div>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => void handleFileUpload(e)}
-              className="hidden"
-              id="imageUpload"
-            />
-            <label
-              htmlFor="imageUpload"
-              className="px-4 py-2 bg-blue-500 text-white rounded-md cursor-pointer hover:bg-blue-600 transition"
-            >
-              Upload Image
-            </label>
-          </div>
 
-          {/* Name Input */}
-          <div className="space-y-2">
-            <label htmlFor="name" className="block text-sm font-medium">
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full p-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800"
-            />
-          </div>
-
-          {/* Bio Input */}
-          <div className="space-y-2">
-            <label htmlFor="bio" className="block text-sm font-medium">
-              Bio
-            </label>
-            <textarea
-              id="bio"
-              value={bio}
-              onChange={(e) => setBio(e.target.value)}
-              rows={4}
-              className="w-full p-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800"
-              placeholder="Tell us about yourself..."
-            />
-          </div>
-
-          {/* Tags Input */}
-          <div className="space-y-2">
-            <label htmlFor="tags" className="block text-sm font-medium">
-              Skills & Interests
-            </label>
-            <div className="flex flex-wrap gap-2 mb-2">
-              {tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-md flex items-center gap-1"
-                >
-                  {tag}
-                  <button
-                    onClick={() => handleRemoveTag(tag)}
-                    className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
-                  >
-                    ×
-                  </button>
-                </span>
-              ))}
-            </div>
-            <div className="flex gap-2">
+            {/* Name Input */}
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text">Name</span>
+              </label>
               <input
                 type="text"
-                value={newTag}
-                onChange={(e) => setNewTag(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && handleAddTag()}
-                className="flex-1 p-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800"
-                placeholder="Add a skill or interest..."
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="input input-bordered w-full"
               />
+            </div>
+
+            {/* Bio Input */}
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text">Bio</span>
+              </label>
+              <textarea
+                id="bio"
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                rows={4}
+                className="textarea textarea-bordered w-full"
+                placeholder="Tell us about yourself..."
+              />
+            </div>
+
+            {/* Tags Input */}
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text">Skills & Interests</span>
+              </label>
+              <div className="flex flex-wrap gap-2 mb-2">
+                {tags.map((tag) => (
+                  <span key={tag} className="badge badge-primary">
+                    {tag}
+                    <button
+                      onClick={() => handleRemoveTag(tag)}
+                      className="btn btn-ghost btn-xs btn-circle"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+              <div className="join w-full">
+                <input
+                  type="text"
+                  value={newTag}
+                  onChange={(e) => setNewTag(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && handleAddTag()}
+                  className="input input-bordered join-item flex-1"
+                  placeholder="Add a skill or interest..."
+                />
+                <button
+                  onClick={handleAddTag}
+                  className="btn btn-primary join-item"
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+
+            {/* Save Button */}
+            <div className="card-actions justify-end">
               <button
-                onClick={handleAddTag}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+                onClick={() => void handleSave()}
+                className="btn btn-primary"
               >
-                Add
+                Save Changes
               </button>
             </div>
-          </div>
-
-          {/* Save Button */}
-          <div className="flex justify-end">
-            <button
-              onClick={() => void handleSave()}
-              className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
-            >
-              Save Profile
-            </button>
           </div>
         </div>
       </div>

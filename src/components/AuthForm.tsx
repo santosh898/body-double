@@ -35,63 +35,73 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
   };
 
   return (
-    <div className="flex flex-col gap-8 w-96 mx-auto">
-      <h2 className="text-2xl font-bold text-center">
-        {mode === "signIn" ? "Sign In" : "Sign Up"}
-      </h2>
-      <form
-        className="flex flex-col gap-4"
-        onSubmit={(e) => void handleSubmit(e)}
-      >
-        <input
-          className="bg-light dark:bg-dark text-dark dark:text-light rounded-md p-2 border-2 border-slate-200 dark:border-slate-800"
-          type="email"
-          name="email"
-          placeholder="Email"
-          required
-          disabled={isLoading}
-        />
-        <input
-          className="bg-light dark:bg-dark text-dark dark:text-light rounded-md p-2 border-2 border-slate-200 dark:border-slate-800"
-          type="password"
-          name="password"
-          placeholder="Password"
-          required
-          disabled={isLoading}
-        />
-        <button
-          className="bg-dark dark:bg-light text-light dark:text-dark rounded-md p-2 font-medium disabled:opacity-50"
-          type="submit"
-          disabled={isLoading}
+    <div className="card bg-base-100 shadow-xl w-full">
+      <div className="card-body gap-6">
+        <h2 className="card-title justify-center text-2xl">
+          {mode === "signIn" ? "Sign In" : "Sign Up"}
+        </h2>
+        <form
+          className="form-control flex flex-col gap-4"
+          onSubmit={(e) => void handleSubmit(e)}
         >
-          {isLoading ? (
-            <div className="flex items-center justify-center">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-current"></div>
-              <span className="ml-2">
-                {mode === "signIn" ? "Signing in..." : "Creating account..."}
-              </span>
-            </div>
-          ) : mode === "signIn" ? (
-            "Sign In"
-          ) : (
-            "Sign Up"
-          )}
-        </button>
-        <div className="flex flex-row gap-2 justify-center text-sm">
-          <span>
-            {mode === "signIn"
-              ? "Don't have an account?"
-              : "Already have an account?"}
-          </span>
-          <button
-            type="button"
-            className="text-dark dark:text-light underline hover:no-underline"
-            onClick={onToggleMode}
-          >
-            {mode === "signIn" ? "Sign up" : "Sign in"}
-          </button>
-        </div>
-      </form>
+          <div className="form-control mx-24">
+            <input
+              className="input input-bordered w-full"
+              type="email"
+              name="email"
+              placeholder="Email"
+              required
+              disabled={isLoading}
+            />
+          </div>
+          <div className="form-control mx-24">
+            <input
+              className="input input-bordered w-full"
+              type="password"
+              name="password"
+              placeholder="Password"
+              required
+              disabled={isLoading}
+            />
+          </div>
+          <div className="form-control mt-2 self-center">
+            <button
+              className="btn btn-primary w-full"
+              type="submit"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <div className="flex items-center justify-center">
+                  <span className="loading loading-spinner loading-sm"></span>
+                  <span className="ml-2">
+                    {mode === "signIn"
+                      ? "Signing in..."
+                      : "Creating account..."}
+                  </span>
+                </div>
+              ) : mode === "signIn" ? (
+                "Sign In"
+              ) : (
+                "Sign Up"
+              )}
+            </button>
+          </div>
+          <div className="text-center">
+            <span className="text-sm opacity-70">
+              {mode === "signIn"
+                ? "Don't have an account?"
+                : "Already have an account?"}
+            </span>
+            <button
+              type="button"
+              className="btn btn-link btn-sm"
+              onClick={onToggleMode}
+            >
+              {mode === "signIn" ? "Sign up" : "Sign in"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
