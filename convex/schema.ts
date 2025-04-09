@@ -30,9 +30,6 @@ export default defineSchema({
     .index("by_userId", ["userId"])
     .index("by_online", ["isOnline"])
     .index("by_lastPing", ["lastPing"]),
-  numbers: defineTable({
-    value: v.number(),
-  }),
   pairingRequests: defineTable({
     fromUserId: v.string(),
     toUserId: v.string(),
