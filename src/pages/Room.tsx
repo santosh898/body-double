@@ -21,12 +21,12 @@ export default function Room() {
   // Redirect if not authenticated or not in a session
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate("/sign-in");
+      void navigate("/sign-in");
       return;
     }
 
     if (currentStatus && !currentStatus.inSession) {
-      navigate("/lobby");
+      void navigate("/lobby");
       return;
     }
   }, [isAuthenticated, currentStatus, navigate]);
@@ -42,7 +42,7 @@ export default function Room() {
     void endSession()
       .then(() => {
         toast.success("Session ended");
-        navigate("/lobby");
+        void navigate("/lobby");
       })
       .catch((error) => {
         toast.error("Failed to end session");

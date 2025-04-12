@@ -34,7 +34,7 @@ export default function Lobby() {
   // Redirect if not authenticated
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate("/sign-in");
+      void navigate("/sign-in");
     }
   }, [isAuthenticated, navigate]);
 
@@ -100,7 +100,7 @@ export default function Lobby() {
         <div className="flex justify-between items-center mb-6 p-3 rounded-lg bg-base-200">
           <span>You have an active session</span>
           <button
-            onClick={() => navigate("/room")}
+            onClick={() => void navigate("/room")}
             className="btn btn-primary btn-sm"
           >
             Go to Room →

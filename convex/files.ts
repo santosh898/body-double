@@ -1,6 +1,5 @@
 import { v } from "convex/values";
-import { action, mutation, query } from "./_generated/server";
-import { Id } from "./_generated/dataModel";
+import { mutation, query } from "./_generated/server";
 
 export const generateUploadUrl = mutation({
   args: {},
