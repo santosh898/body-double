@@ -4,6 +4,7 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import Peer from "peerjs";
 import { toast } from "sonner";
+import { notificationManager } from "../../lib/notifications";
 
 interface AudioChatProps {
   currentUserId: string;
@@ -83,6 +84,16 @@ export function AudioChat({ currentUserId, partnerId }: AudioChatProps) {
       }
     };
   }, [currentUserId, updateStatus]);
+
+  useEffect(() => {
+    if (isConnected) {
+      void notificationManager.showNotification({
+        title: "Call Connected",
+        body: "Audio call has been established",
+        type: "callConnected",
+      });
+    }
+  }, [isConnected]);
 
   const handleCall = (call: any) => {
     call.on("stream", (remoteStream: MediaStream) => {

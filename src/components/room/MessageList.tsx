@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Id } from "../../../convex/_generated/dataModel";
+import { notificationManager } from "../../lib/notifications";
 
 interface Message {
   _id: Id<"messages">;
@@ -26,6 +27,21 @@ export function MessageList({
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Add notification for new messages
+  useEffect(() => {
+    if (messages.length === 0) return;
+
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage.userId !== currentUserId) {
+      console.log("Showing notification");
+      void notificationManager.showNotification({
+        title: `New message from ${partnerName}`,
+        body: lastMessage.content,
+        type: "message",
+      });
+    }
+  }, [messages, currentUserId, partnerName]);
 
   return (
     <div className="flex-1 overflow-y-auto space-y-5 mb-4 px-2">

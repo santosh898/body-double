@@ -83,7 +83,7 @@ export const getIncomingRequests = query({
       .collect();
 
     // Get profiles for users who sent requests
-    return await Promise.all(
+    const response = await Promise.all(
       requests.map(async (request) => {
         const profile = await ctx.db
           .query("profiles")
@@ -96,6 +96,8 @@ export const getIncomingRequests = query({
         };
       }),
     );
+
+    return response;
   },
 });
 

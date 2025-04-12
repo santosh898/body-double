@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { notificationManager } from "./lib/notifications";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Navigation } from "./components/Navigation";
 import {
@@ -12,6 +14,11 @@ import Room from "./pages/Room";
 import { Toaster } from "sonner";
 
 export default function App() {
+  useEffect(() => {
+    // Request notification permission when the app loads
+    void notificationManager.requestPermission();
+  }, []);
+
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-light dark:bg-dark text-dark dark:text-light">

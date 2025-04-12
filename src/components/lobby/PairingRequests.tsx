@@ -5,6 +5,8 @@ import { Card } from "../ui/card";
 import { toast } from "sonner";
 import { Doc, Id } from "../../../convex/_generated/dataModel";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { notificationManager } from "../../lib/notifications";
 
 interface RequestWithProfile {
   request: Doc<"pairingRequests">;
@@ -27,7 +29,7 @@ function RequestCard({ request, profile }: RequestWithProfile) {
       await respondToRequest({ requestId: request._id, accept });
       toast.success(accept ? "Request accepted!" : "Request declined");
       if (accept) {
-        navigate("/room");
+        void navigate("/room");
       }
     } catch (error) {
       toast.error("Failed to respond to request");
@@ -124,12 +126,33 @@ function OutgoingRequestCard({ request, profile }: RequestWithProfile) {
 }
 
 export function PairingRequests() {
-  const incomingRequests = useQuery(api.pairing.getIncomingRequests) || [];
+  const incomingRequests = useQuery(api.pairing.getIncomingRequests);
   const outgoingRequest = useQuery(api.pairing.getOutgoingRequest);
+
+  useEffect(() => {
+    if (incomingRequests && incomingRequests.length > 0) {
+      const latestRequest = incomingRequests[0];
+      void notificationManager.showNotification({
+        title: "New Pair Request",
+        body: `${latestRequest.profile?.name} wants to pair with you!`,
+        type: "pairRequest",
+      });
+    }
+  }, [incomingRequests]);
+
+  useEffect(() => {
+    if (outgoingRequest?.request.status === "accepted") {
+      void notificationManager.showNotification({
+        title: "Pair Request Accepted",
+        body: `${outgoingRequest.profile?.name} accepted your request!`,
+        type: "pairAccepted",
+      });
+    }
+  }, [outgoingRequest]);
 
   return (
     <div className="space-y-4 mb-8">
-      {incomingRequests.length > 0 && (
+      {incomingRequests && incomingRequests.length > 0 && (
         <div>
           <h2 className="text-xl font-semibold mb-4">Incoming Requests</h2>
           <div className="space-y-4">
