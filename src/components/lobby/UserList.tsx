@@ -115,7 +115,7 @@ export function UserList({
   currentTags,
 }: UserListProps) {
   const outgoingRequest = useQuery(api.pairing.getOutgoingRequest);
-  const currentStatus = useQuery(api.lobby.getCurrentUserStatus);
+  const currentStatus = useQuery(api.lobby.getCurrentUserStatus, {});
 
   if (!users.length) {
     return (
